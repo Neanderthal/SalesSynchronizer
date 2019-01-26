@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import requests
+import vk
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import transaction
-import vk
 
 from tttx.models import ShopProduct, ShopProductImages
 
@@ -22,7 +22,7 @@ class Command(BaseCommand):
             caption = f'{product.name}'
             self.post_photo(caption, url)
 
-        pass
+
 
     def post_photo(self, caption, url):
         session = vk.AuthSession(app_id='6015721',
