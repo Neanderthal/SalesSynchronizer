@@ -1,17 +1,33 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 import requests
+import vk
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import transaction
-import vk
 
-from tttx.models import ShopProduct, ShopProductImages
+from tttx.models import ShopProduct, ShopProductImages, ShopProductParams
 
 
 @transaction.atomic
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         for product in ShopProduct.objects.all():
+            params_filter = ShopProductParams.objects.filter(
+                product_id=product.id)
+
+            if not product.edit_datetime:
+                saved_date=datetime.now()
+
+            if not params_filter.exists():
+                product_param = ShopProductParams(
+                    product_id=product.id,
+                    name=saved_date,
+                    value=
+                )
+
+
             images = list(ShopProductImages.objects.filter(product_id=product.id))
             filename = f'{images[0].id}.{images[0].ext}'
             url_base = 'http://yan-spb.tk/wa-data/protected'
@@ -22,7 +38,7 @@ class Command(BaseCommand):
             caption = f'{product.name}'
             self.post_photo(caption, url)
 
-        pass
+
 
     def post_photo(self, caption, url):
         session = vk.AuthSession(app_id='6015721',
