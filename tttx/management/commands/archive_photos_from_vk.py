@@ -27,7 +27,7 @@ class Command(BaseCommand):
         owner_id = "-175030782"
 
         response = requests.get('https://api.vk.com/method/photos.get', params={
-            'access_token': access_token,
+            'access_token': settings.VK_ACCESS_TOKEN,
             'owner_id': '-140432051',
             'album_id': '242677535',
             'rev': 1,
