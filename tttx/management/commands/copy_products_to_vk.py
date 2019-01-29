@@ -3,6 +3,7 @@ import io
 from datetime import datetime
 from dateutil import parser
 import requests
+import os
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import transaction
@@ -52,7 +53,9 @@ def post_photo(caption, download_url, filename):
         f.write(file)
 
     # Подготавливаем файл для отправки и отправляем его
-    files = {'file1': open(filename, "rb")}
+    stream = open(filename, "rb")
+    print(f'size: {os.path.getsize(filename)} caption {caption} filename {filename}')
+    files = {'file1': stream}
 
     response = requests.post(upload_url, files=files).json()
 
