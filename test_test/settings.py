@@ -91,8 +91,10 @@ DATABASES = {
 }
 
 VK_ACCESS_TOKEN = '3dafe3da022feb6f1b66b195f35840576cb830a47ba3005730937e242bd85d11fa99d9a2381cf56189d0d'
+WEBASSYST_ACCESS_TOKEN = '89e6b8ede056a40eadd540228134b2a3'
 VK_GROUP_ID = 175030782
 VK_ALBUM_ID = 258677915
+
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 

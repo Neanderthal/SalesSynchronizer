@@ -54,7 +54,8 @@ def post_photo(caption, download_url, filename):
 
     # Подготавливаем файл для отправки и отправляем его
     stream = open(filename, "rb")
-    print(f'size: {os.path.getsize(filename)} caption {caption} filename {filename}')
+    print((f'size: {os.path.getsize(filename)}'
+           f'caption {caption} filename {filename} upload  {download_url}'))
     files = {'file1': stream}
 
     response = requests.post(upload_url, files=files).json()
@@ -90,17 +91,21 @@ def get_upload_url(album_id, group_id):
 @transaction.atomic
 class Command(BaseCommand):
     transaction.atomic()
+
     def handle(self, *args, **kwargs):
         for product in ShopProduct.objects.all():
             if update_date_changed(product):
                 images = list(
                     ShopProductImages.objects.filter(product_id=product.id))
                 if images:
-                    filename = f'{images[0].id}.{images[0].ext}'
-                    url_base = 'http://yan-spb.tk/wa-data/protected'
-                    url = (
-                        f'{url_base}/shop/products/0{product.id}/00'
-                        f'/{product.id}/images/{filename}'
-                    )
+                    filename, url = self.get_image_url(product)
                     caption = f'{product.name}'
                     post_photo(caption, url, filename)
+
+    def get_image_url(self, product):
+        content = requests.get(
+            f"http://yan-spb.tk/api.php/shop.product.images.getInfo",
+            params={'id': product.image_id,
+                    'access_token': settings.WEBASSYST_ACCESS_TOKEN
+                    }).json()
+        return content['original_filename'], content['url_big']
